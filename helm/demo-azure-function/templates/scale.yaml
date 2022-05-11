@@ -1,0 +1,14 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ include "demo-azure-function.fullname" . }}
+  labels: {}
+spec:
+  scaleTargetRef:
+    name: demo-azure-function
+  triggers:
+  - type: azure-queue
+    metadata:
+      queueLength: {{ .Values.keda.queueLength | quote }}
+      queueName: demo-queue
+      connectionFromEnv: AzureWebJobsStorage

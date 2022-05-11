@@ -1,0 +1,51 @@
+version: "3"
+
+services:
+
+  azurite-blob:
+    image:  mcr.microsoft.com/azure-storage/azurite
+    restart: always
+    ports:
+      - "10000:10000"
+
+  demo-webapi:
+    image: azure-func-demo/web-api
+    build:
+      context: .
+      dockerfile: src/Demo.WebApi/Dockerfile
+      args:
+        - BUILD_NUMBER=1.0.1
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
+      - AzureWebJobsStorage=AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;DefaultEndpointsProtocol=http;BlobEndpoint=http://azurite-blob:10000/devstoreaccount1;QueueEndpoint=http://azurite-blob:10001/devstoreaccount1;TableEndpoint=http://azurite-blob:10002/devstoreaccount1;
+    ports:
+      - "5002:80"
+      - "5001:443"
+    links:
+      - azurite-blob
+    depends_on:
+      - start_dependencies
+
+  demo-azure-function:
+    image: azure-func-demo/azure-function
+    build:
+      context: .
+      dockerfile: src/Demo.AzureFunction/Dockerfile
+      args:
+        - BUILD_NUMBER=1.0.0
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - AzureWebJobsStorage=AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;DefaultEndpointsProtocol=http;BlobEndpoint=http://azurite-blob:10000/devstoreaccount1;QueueEndpoint=http://azurite-blob:10001/devstoreaccount1;TableEndpoint=http://azurite-blob:10002/devstoreaccount1;
+    ports:
+      - "5005:5000"
+    links:
+      - azurite-blob
+    depends_on:
+      - start_dependencies
+
+  start_dependencies:
+    image: dadarek/wait-for-dependencies
+    depends_on:
+      - azurite-blob
+    command: azurite-blob:10000

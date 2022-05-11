@@ -1,0 +1,9 @@
+<Project>
+
+    <PropertyGroup>
+      <Version Condition=" '$(VersionNumber)' == '' ">1.0.0</Version>
+      <Version Condition=" '$(VersionNumber)' != '' ">$(VersionNumber)</Version>
+    </PropertyGroup>
+
+</Project>
+  
