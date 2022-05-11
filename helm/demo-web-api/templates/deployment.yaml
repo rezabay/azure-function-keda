@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "demo-webapi.fullname" . }}
+  name: {{ include "demo-web-api.fullname" . }}
   labels:
-    {{- include "demo-webapi.labels" . | nindent 4 }}
+    {{- include "demo-web-api.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "demo-webapi.selectorLabels" . | nindent 6 }}
+      {{- include "demo-web-api.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "demo-webapi.selectorLabels" . | nindent 8 }}
+        {{- include "demo-web-api.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

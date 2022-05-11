@@ -22,7 +22,21 @@ docker-compose -f "docker-compose.yml" up -d --build
 
 ## Run Kubernetes dashboard
 - `kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml`
+- `kubectl apply -f ./k8s/dashboard-adminuser.yaml`
+- `kubectl apply -f ./k8s/dashboard-cluster-admin.yaml`
+- Generate login token: `kubectl -n kubernetes-dashboard get secret $(kubectl -n kubernetes-dashboard get sa/admin-user -o jsonpath="{.secrets[0].name}") -o go-template="{{.data.token | base64decode}}"`
 - `kubectl proxy`
-- `kubectl apply -f dashboard-adminuser.yaml`
-- `kubectl apply -f dashboard-cluster-admin.yaml`
-- `kubectl -n kubernetes-dashboard get secret $(kubectl -n kubernetes-dashboard get sa/admin-user -o jsonpath="{.secrets[0].name}") -o go-template="{{.data.token | base64decode}}"`
+- Navigate to: `http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/login`
+- Login using generated token from the previous step
+
+## Install KEDA
+```
+helm repo add kedacore https://kedacore.github.io/charts
+helm repo update
+kubectl create namespace keda
+helm install keda kedacore/keda --version 2.0.0 --namespace keda
+```
+
+## Setup local docker repository for local kubernetes cluster
+- Run the local repository: `docker run -d -p 5000:5000 --restart=always --name registry registry:2`
+- Add 'localhost:5000' to insecure-registries in docker settings

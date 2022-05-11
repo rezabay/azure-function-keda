@@ -8,10 +8,10 @@
     <Import Project="..\Build\Common.props" />
 
     <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+        <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
         <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0" />
         <PackageReference Include="Azure.Storage.Queues" Version="12.9.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.1" />
     </ItemGroup>
 
 </Project>

@@ -6,6 +6,10 @@ metadata:
 spec:
   scaleTargetRef:
     name: demo-azure-function
+  pollingInterval: 5
+  cooldownPeriod:  15
+  minReplicaCount: 0
+  maxReplicaCount: 10
   triggers:
   - type: azure-queue
     metadata:

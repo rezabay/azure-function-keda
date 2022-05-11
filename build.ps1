@@ -1,6 +1,6 @@
 param (
     $registry = "localhost:5000",
-    $appVersion = "1.0.0"
+    $appVersion = "1.0.1"
 )
 
 $ErrorActionPreference = "Stop"
@@ -28,19 +28,19 @@ function DeployHelmChart {
 }
 
 function BuildAll {
-    BuildDockerImage "./src/Demo.WebApi" "demo-webapi"
+    BuildDockerImage "./src/Demo.WebApi" "demo-web-api"
     BuildDockerImage "./src/Demo.AzureFunction" "demo-azure-function"
 }
 
 function DeployAll {
-    DeployHelmChart "demo-webapi"
+    DeployHelmChart "demo-web-api"
     DeployHelmChart "demo-azure-function"
 }
 
 function DeleteAll {
-    helm delete "demo-webapi" "demo-azure-function"
+    helm delete "demo-web-api" "demo-azure-function"
 }
 
-BuildAll
-# DeployAll
+# BuildAll
+DeployAll
 # DeleteAll

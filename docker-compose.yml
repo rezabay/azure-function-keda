@@ -8,7 +8,7 @@ services:
     ports:
       - "10000:10000"
 
-  demo-webapi:
+  demo-web-api:
     image: azure-func-demo/web-api
     build:
       context: .
